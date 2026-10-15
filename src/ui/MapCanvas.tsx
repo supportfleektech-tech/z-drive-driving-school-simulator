@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { NODES, EDGES, halfWidth, RB_OUTER, RB_ISLAND, PARKING, LANDMARKS, MAP_BOUNDS, ROAD } from '../game/map';
 
 export interface MapCanvasProps {
@@ -12,7 +12,8 @@ export default function MapCanvas(p: MapCanvasProps) {
   const bw = MAP_BOUNDS.maxX - MAP_BOUNDS.minX, bh = MAP_BOUNDS.maxZ - MAP_BOUNDS.minZ;
   const scale = Math.min(p.width / bw, p.height / bh);
   const ox = (p.width - bw * scale) / 2, oz = (p.height - bh * scale) / 2;
-  const tx = (x: number) => ox + (x - MAP_BOUNDS.minX) * scale; const tz = (z: number) => oz + (z - MAP_BOUNDS.minZ) * scale;
+  const tx = useCallback((x: number) => ox + (x - MAP_BOUNDS.minX) * scale, [scale, ox]);
+  const tz = useCallback((z: number) => oz + (z - MAP_BOUNDS.minZ) * scale, [scale, oz]);
 
   useEffect(() => {
     const c = ref.current; if (!c) return; const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -77,7 +78,7 @@ export default function MapCanvas(p: MapCanvasProps) {
     };
     if (p.start) arrow(p.start, '#f97316');
     if (p.player) arrow(p.player, '#facc15');
-  }, [p.width, p.height, p.route, p.routeIdx, p.blocked, p.dest, p.start, p.player, p.picked, p.showLabels, p.showLandmarks, p.cars, p.bay, p.tick, p.highlight, scale, ox, oz]);
+  }, [p.width, p.height, p.route, p.routeIdx, p.blocked, p.dest, p.start, p.player, p.picked, p.showLabels, p.showLandmarks, p.cars, p.bay, p.tick, p.highlight, scale, ox, oz, tx, tz]);
 
   const onClick = (ev: React.MouseEvent<HTMLCanvasElement>) => {
     if (!p.onPick) return; const rect = ref.current!.getBoundingClientRect();

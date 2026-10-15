@@ -24,10 +24,13 @@ export default tseslint.config(
       // are designed for pure React state and conflict with that architecture.
       "react-hooks/set-state-in-effect": "off",
       "react-hooks/immutability": "off",
+      // Non-null assertions (!) are intentional throughout the engine: Three.js
+      // scene children, refs guaranteed set after mount, and DOM elements checked
+      // before use. Strict TypeScript still catches real type errors.
+      "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/strict-boolean-expressions": "off",
-      "@typescript-eslint/no-non-null-assertion": "warn",
       "no-console": ["warn", { allow: ["error", "warn"] }],
     },
   },
